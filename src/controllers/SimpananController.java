@@ -26,19 +26,7 @@ private Simpanan simpanan;
     }
 
     
-    @Override
-    public boolean save(String kdSimpanan, String jmlSimpanan) {
-           return this.sdao.insert(new Simpanan(kdSimpanan, Integer.parseInt(jmlSimpanan)));
-  
-    }
 
-    @Override
-    public boolean edit(String kdSimpanan, String jmlSimpanan) {
-           return this.sdao.update(new Simpanan(kdSimpanan, Integer.parseInt(jmlSimpanan)));   }
-
-    @Override
-    public boolean drop(String id) {
-           return this.sdao.delete(id); }
 
     @Override
     public List<Simpanan> binding() {
@@ -55,12 +43,6 @@ private Simpanan simpanan;
     public List<Simpanan> find(String category, String Data) {
             return this.sdao.getAll(category, Data);
   }
-
-    @Override
-    public Simpanan findbyId(String id) {
-           return this.sdao.getById(id); 
-    }
-
     
  }
     

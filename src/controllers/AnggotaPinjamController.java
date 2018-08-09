@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller;
+package controllers;
 
-import dao.AnggotaPinjamDAO;
+import daos.AnggotaPinjamDAO;
 import entities.AnggotaPinjam;
 import java.sql.Connection;
 import java.sql.Date;
@@ -26,26 +26,15 @@ public class AnggotaPinjamController implements AnggotaPinjamInterfaceController
         this.anggotaPinjamDAO = new AnggotaPinjamDAO(connection);
     }
     
-    /**
-     * 
-     * @param kdAnggotaP
-     * @param kdAnggota
-     * @param kdKaryawan
-     * @param namaJaminan
-     * @param tglPinjam
-     * @param nominalPinjam
-     * @param jangkaWaktu
-     * @return 
-     */
     @Override
-    public boolean save(String kdAnggotaP, String kdAnggota, String kdKaryawan, String namaJaminan, Date tglPinjam, int nominalPinjam, int jangkaWaktu) {
-        AnggotaPinjam anggotaPinjam = new AnggotaPinjam(kdAnggotaP, kdAnggota, kdKaryawan, namaJaminan, tglPinjam, nominalPinjam, jangkaWaktu);
+    public boolean save( String kdAnggota, String kdKaryawan, String namaJaminan, int nominalPinjam, int jangkaWaktu) {
+        AnggotaPinjam anggotaPinjam = new AnggotaPinjam( kdAnggota, kdKaryawan, namaJaminan, nominalPinjam, jangkaWaktu);
         return this.anggotaPinjamDAO.insert(anggotaPinjam);
     }
 
     @Override
-    public boolean edit(String kdAnggotaP, String kdAnggota, String kdKaryawan, String namaJaminan, Date tglPinjam, int nominalPinjam, int jangkaWaktu) {
-        AnggotaPinjam anggotaPinjam = new AnggotaPinjam(kdAnggotaP, kdAnggota, kdKaryawan, namaJaminan, tglPinjam, nominalPinjam, jangkaWaktu);
+    public boolean edit(String kdAnggotaP, String kdAnggota, String kdKaryawan, String namaJaminan) {
+        AnggotaPinjam anggotaPinjam = new AnggotaPinjam(kdAnggotaP, kdAnggota, kdKaryawan, namaJaminan);
        return this.anggotaPinjamDAO.update(anggotaPinjam);
     }
 

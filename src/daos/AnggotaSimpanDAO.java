@@ -19,64 +19,73 @@ import java.util.logging.Logger;
  *
  * @author iqbael17
  */
-public class AnggotaSimpanDAO implements AnggotaSimpanInterfaceDAO{
-private Connection connection;
-    
+public class AnggotaSimpanDAO implements AnggotaSimpanInterfaceDAO {
+
+    private Connection connection;
+
     public AnggotaSimpanDAO(Connection connection) {
         this.connection = connection;
     }
-    
+
+    /**
+     * fungsi inert anggota simpan
+     *
+     * @param anggotaSimpan
+     * @return
+     */
     @Override
     public boolean insert(AnggotaSimpan anggotaSimpan) {
-    boolean flag = false;
-        String query = "INSERT INTO Anggota_simpan VALUES(?,?,?,?,?,?)";
+        boolean flag = false;
+        String query = "INSERT INTO Anggota_simpan VALUES(?,'S01',?,?,sysdate,?)";
         try {
-
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, anggotaSimpan.getKdAnggotaSimpan());
-            preparedStatement.setString(2, anggotaSimpan.getKdSimpanan());
-            preparedStatement.setString(3, anggotaSimpan.getKdAnggota());
-            preparedStatement.setString(4, anggotaSimpan.getKdKaryawan());
-            preparedStatement.setDate(5, anggotaSimpan.getTglSimpan());
-            preparedStatement.setInt(6, anggotaSimpan.getNominal());
+            preparedStatement.setString(2, anggotaSimpan.getKdAnggota());
+            preparedStatement.setString(3, anggotaSimpan.getKdKaryawan());
+            preparedStatement.setInt(4, anggotaSimpan.getNominal());
             preparedStatement.executeUpdate();
             flag = true;
         } catch (SQLException ex) {
             Logger.getLogger(AnggotaDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return flag;
-        
-        
-    }
 
+    }
+    /**
+     * fungsi anggota melakukan penyimpanan
+     * @param anggotaSimpan
+     * @return 
+     */
     @Override
     public boolean update(AnggotaSimpan anggotaSimpan) {
         try {
-            String query = "UPDATE Anggota_simpan SET kd_simpanan=?, kd_anggota=?"
-                    + "kd_karyawan=?, tgl_simpan=?, nominal=?"
+            String query = "UPDATE Anggota_simpan SET kd_anggota=?,"
+                    + "kd_karyawan=?, tgl_simpan = sysdate, nominal=?"
                     + " WHERE kd_anggotasimpan=?";
 
             PreparedStatement preparedStatement = connection.prepareStatement(query);
 
-            preparedStatement.setString(1, anggotaSimpan.getKdAnggotaSimpan());
-             preparedStatement.setString(2, anggotaSimpan.getKdSimpanan());
-            preparedStatement.setString(3, anggotaSimpan.getKdAnggota());
-            preparedStatement.setString(4, anggotaSimpan.getKdKaryawan());
-            preparedStatement.setDate(5, anggotaSimpan.getTglSimpan());
-            preparedStatement.setInt(6, anggotaSimpan.getNominal());
+            preparedStatement.setString(1, anggotaSimpan.getKdAnggota());
+            preparedStatement.setString(2, anggotaSimpan.getKdKaryawan());
+            preparedStatement.setInt(3, anggotaSimpan.getNominal());
+            preparedStatement.setString(4, anggotaSimpan.getKdAnggotaSimpan());
             preparedStatement.execute();
-
             return true;
         } catch (SQLException ex) {
             Logger.getLogger(AnggotaDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return false;  
+        return false;
     }
-
+    
+    /**
+     * 
+     * @param id
+     * @return 
+     */
     @Override
     public boolean delete(String id) {
-      
- try {
+
+        try {
             String query = "DELETE FROM Anggota_simpan Where kd_anggotasimpan=?";
 
             PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -91,8 +100,8 @@ private Connection connection;
 
     @Override
     public List<AnggotaSimpan> getAll() {
-        
-List<AnggotaSimpan> datas = new ArrayList<>();
+
+        List<AnggotaSimpan> datas = new ArrayList<>();
         String query = "SELECT *From Anggota_simpan";
         try {
 
@@ -100,14 +109,14 @@ List<AnggotaSimpan> datas = new ArrayList<>();
             ResultSet rs = preparedStatement.executeQuery();
 
             while (rs.next()) {
-          AnggotaSimpan anggotaSimpan = new AnggotaSimpan();
+                AnggotaSimpan anggotaSimpan = new AnggotaSimpan();
                 anggotaSimpan.setKdAnggotaSimpan(rs.getString(1));
                 anggotaSimpan.setKdSimpanan(rs.getString(2));
                 anggotaSimpan.setKdAnggota(rs.getString(3));
                 anggotaSimpan.setKdKaryawan(rs.getString(4));
                 anggotaSimpan.setTglSimpan(rs.getDate(5));
                 anggotaSimpan.setNominal(rs.getInt(6));
-                
+
                 datas.add(anggotaSimpan);
             }
 
@@ -122,21 +131,21 @@ List<AnggotaSimpan> datas = new ArrayList<>();
     public List<AnggotaSimpan> getAll(String category, String sort) {
         List<AnggotaSimpan> datas = new ArrayList<>();
         String query = "SELECT *FROM Anggota_simpan ORDER BY " + category + " " + sort;
-        
+
         try {
 
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             ResultSet rs = preparedStatement.executeQuery();
 
             while (rs.next()) {
-                 AnggotaSimpan anggotaSimpan = new AnggotaSimpan();
+                AnggotaSimpan anggotaSimpan = new AnggotaSimpan();
                 anggotaSimpan.setKdAnggotaSimpan(rs.getString(1));
                 anggotaSimpan.setKdSimpanan(rs.getString(2));
                 anggotaSimpan.setKdAnggota(rs.getString(3));
                 anggotaSimpan.setKdKaryawan(rs.getString(4));
                 anggotaSimpan.setTglSimpan(rs.getDate(5));
                 anggotaSimpan.setNominal(rs.getInt(5));
-                              datas.add(anggotaSimpan);
+                datas.add(anggotaSimpan);
 
             }
 
@@ -149,23 +158,21 @@ List<AnggotaSimpan> datas = new ArrayList<>();
 
     @Override
     public List<AnggotaSimpan> search(String category, String data) {
-        
- List<AnggotaSimpan> datas = new ArrayList<>();
-        String query = "SELECT *FROM Anggota_simpan WHERE " + category + " " + " like '%" + data + "%'";
-           try {
+
+        List<AnggotaSimpan> datas = new ArrayList<>();
+        String query = "SELECT kd_anggotasimpan,kd_anggota,tgl_simpan,nominal FROM Anggota_simpan WHERE " + category + " " + " like '%" + data + "%'";
+        try {
 
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             ResultSet rs = preparedStatement.executeQuery();
 
             while (rs.next()) {
-                 AnggotaSimpan anggotaSimpan = new AnggotaSimpan();
+                AnggotaSimpan anggotaSimpan = new AnggotaSimpan();
                 anggotaSimpan.setKdAnggotaSimpan(rs.getString(1));
-                anggotaSimpan.setKdSimpanan(rs.getString(2));
-                anggotaSimpan.setKdAnggota(rs.getString(3));
-                anggotaSimpan.setKdKaryawan(rs.getString(4));
-                anggotaSimpan.setTglSimpan(rs.getDate(5));
-                anggotaSimpan.setNominal(rs.getInt(5));
-                              datas.add(anggotaSimpan);
+                anggotaSimpan.setKdAnggota(rs.getString(2));
+                anggotaSimpan.setTglSimpan(rs.getDate(3));
+                anggotaSimpan.setNominal(rs.getInt(4));
+                datas.add(anggotaSimpan);
 
             }
 
@@ -178,11 +185,11 @@ List<AnggotaSimpan> datas = new ArrayList<>();
 
     @Override
     public AnggotaSimpan getById(String id) {
-    
-  AnggotaSimpan anggotaSimpan = new AnggotaSimpan();
+
+        AnggotaSimpan anggotaSimpan = new AnggotaSimpan();
         String query = "SELECT *FROM Anggota_simpan WHERE kd_anggotasimpan = '" + id + "'";
-            try {
-             
+        try {
+
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             ResultSet rs = preparedStatement.executeQuery();
 
@@ -199,5 +206,5 @@ List<AnggotaSimpan> datas = new ArrayList<>();
         }
         return anggotaSimpan;
     }
-    
+
 }

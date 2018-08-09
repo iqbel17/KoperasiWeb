@@ -12,9 +12,8 @@ import entities.Pemasukankoperasi;
  * @author iqbael17
  */
 public interface PemasukanKoperasiInterface  {
-    public boolean save(String kdmasukkoperasi,String kdSimpan ,String tglMasuk ,String nominalMasuk,String namaPemasukan);
-    public boolean edit(String kdmasukKoperasi,String namaPemasukan);
-    public boolean drop (String id);
+    public boolean save(String kdmasukkoperasi, String namaPemasukan, String nominalMasuk);
+    public boolean edit(String kdmasukkoperasi, String namaPemasukan);
     public List<Pemasukankoperasi> binding();
     public List<Pemasukankoperasi> bindingsort(String category, String sort);
     public List<Pemasukankoperasi> find(String category, String Data);

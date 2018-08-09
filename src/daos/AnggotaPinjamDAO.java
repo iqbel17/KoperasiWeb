@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package dao;
+package daos;
 
 import entities.AnggotaPinjam;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -29,47 +30,83 @@ public class AnggotaPinjamDAO implements AnggotaPinjamInterfaceDAO {
 
     public AnggotaPinjamDAO() {
     }
-    
+
     /**
-     * Function Insert
+     * Function Insert menggunakan store procedure
+     *
      * @param anggotaPinjam AnggotaPinjam
-     * @return flag 
+     * @return flag
      */
     @Override
     public boolean insert(AnggotaPinjam anggotaPinjam) {
+//        boolean flag = false;
+//        String query = "INSERT INTO ANGGOTA_PINJAM VALUES (?,?,?,?,?,?,?)";
+//        try {
+//            PreparedStatement preparedStatement = connection.prepareStatement(query);
+//            preparedStatement.setString(1, anggotaPinjam.getKdAnggotaP());
+//            preparedStatement.setString(2, anggotaPinjam.getKdAnggota());
+//            preparedStatement.setString(3, anggotaPinjam.getKdKaryawan());
+//            preparedStatement.setString(4, anggotaPinjam.getNamaJaminan());
+//            preparedStatement.setDate(5, anggotaPinjam.getTglPinjam());
+//            preparedStatement.setInt(6, anggotaPinjam.getNominalPinjam());
+//            preparedStatement.setInt(7, anggotaPinjam.getJangkaWaktu());
+//
+//            preparedStatement.executeUpdate();
+//            flag = true;
+//        } catch (SQLException ex) {
+//            Logger.getLogger(AnggotaPinjamDAO.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return flag;
         boolean flag = false;
-        String query = "INSERT INTO ANGGOTA_PINJAM VALUES (?,?,?,?,?,?,?)";
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, anggotaPinjam.getKdAnggotaP());
-            preparedStatement.setString(2, anggotaPinjam.getKdAnggota());
-            preparedStatement.setString(3, anggotaPinjam.getKdKaryawan());
-            preparedStatement.setString(4, anggotaPinjam.getNamaJaminan());
-            preparedStatement.setDate(5, anggotaPinjam.getTglPinjam());
-            preparedStatement.setInt(6, anggotaPinjam.getNominalPinjam());
-            preparedStatement.setInt(7, anggotaPinjam.getJangkaWaktu());
 
-            preparedStatement.executeUpdate();
+            CallableStatement cs = connection.prepareCall("{ CALL insPinjaman(?,?,?,?,?) }");
+            
+            cs.setString(1, anggotaPinjam.getKdAnggota());
+            cs.setString(2, anggotaPinjam.getKdKaryawan());
+            cs.setString(3, anggotaPinjam.getNamaJaminan());
+            cs.setInt(4, anggotaPinjam.getNominalPinjam());
+            cs.setInt(5, anggotaPinjam.getJangkaWaktu());
+            cs.executeUpdate();
             flag = true;
         } catch (SQLException ex) {
-            Logger.getLogger(AnggotaPinjamDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AnggotaDAO.class.getName()).log(Level.SEVERE, null, ex);
+
         }
+
         return flag;
     }
 
     @Override
     public boolean update(AnggotaPinjam anggotaPinjam) {
-        String query = "UPDATE Anggota_Pinjam SET kd_anggota=?,kd_karyawan=?,nama_jaminan=?,tgl_pinjam=?,nominal_pinjam=?,jangka_waktu=? "
-                + "WHERE kd_anggotapinjam=?";
+//          try {
+//            String query = "UPDATE Anggota_simpan SET kd_anggota=?,"
+//                    + "kd_karyawan=?, tgl_simpan = sysdate, nominal=?"
+//                    + " WHERE kd_anggotasimpan=?";
+//
+//            PreparedStatement preparedStatement = connection.prepareStatement(query);
+//
+//            preparedStatement.setString(1, anggotaSimpan.getKdAnggota());
+//             preparedStatement.setString(2, anggotaSimpan.getKdKaryawan());
+//            preparedStatement.setInt(3, anggotaSimpan.getNominal());
+//            preparedStatement.setString(4, anggotaSimpan.getKdAnggotaSimpan());
+//            preparedStatement.execute();
+//            return true;
+//        } catch (SQLException ex) {
+//            Logger.getLogger(AnggotaDAO.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        return false;  
+        
+        
+        
         try {
+            String query = "UPDATE Anggota_Pinjam SET kd_anggota=?,kd_karyawan=?,nama_jaminan=?,tgl_pinjam=sysdate"
+                + "WHERE kd_anggotapinjam=?";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, anggotaPinjam.getKdAnggota());
             preparedStatement.setString(2, anggotaPinjam.getKdKaryawan());
             preparedStatement.setString(3, anggotaPinjam.getNamaJaminan());
-            preparedStatement.setDate(4, anggotaPinjam.getTglPinjam());
-            preparedStatement.setInt(5, anggotaPinjam.getNominalPinjam());
-            preparedStatement.setInt(6, anggotaPinjam.getJangkaWaktu());
-            preparedStatement.setString(7, anggotaPinjam.getKdAnggotaP());
+            preparedStatement.setString(4, anggotaPinjam.getKdAnggotaP());
             preparedStatement.executeUpdate();
             return true;
         } catch (SQLException ex) {
@@ -103,8 +140,7 @@ public class AnggotaPinjamDAO implements AnggotaPinjamInterfaceDAO {
                 AnggotaPinjam anggotapinjam = new AnggotaPinjam();
                 anggotapinjam.setKdAnggotaP(rs.getString("kd_anggotapinjam"));
                 anggotapinjam.setKdAnggota(rs.getString("kd_anggota"));
-                anggotapinjam.setKdKaryawan(rs.getString("kd_karyawan"));
-                anggotapinjam.setNamaJaminan(rs.getString("nama_pinjaman"));
+                anggotapinjam.setNamaJaminan(rs.getString("nama_jaminan"));
                 anggotapinjam.setTglPinjam(rs.getDate("tgl_pinjam"));
                 anggotapinjam.setNominalPinjam(rs.getInt("nominal_pinjam"));
                 anggotapinjam.setJangkaWaktu(rs.getInt("jangka_waktu"));
@@ -144,7 +180,7 @@ public class AnggotaPinjamDAO implements AnggotaPinjamInterfaceDAO {
     @Override
     public List<AnggotaPinjam> search(String category, String data) {
         List<AnggotaPinjam> datas = new ArrayList<>();
-        String query = "SELECT * FROM anggotapinjam WHERE " + category + " LIKE '%" + data + "%'";
+        String query = "SELECT * FROM anggota_pinjam WHERE " + category + " LIKE '%" + data + "%'";
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             ResultSet rs = preparedStatement.executeQuery();
@@ -152,8 +188,7 @@ public class AnggotaPinjamDAO implements AnggotaPinjamInterfaceDAO {
                 AnggotaPinjam anggotapinjam = new AnggotaPinjam();
                 anggotapinjam.setKdAnggotaP(rs.getString("kd_anggotapinjam"));
                 anggotapinjam.setKdAnggota(rs.getString("kd_anggota"));
-                anggotapinjam.setKdKaryawan(rs.getString("kd_karyawan"));
-                anggotapinjam.setNamaJaminan(rs.getString("nama_pinjaman"));
+                anggotapinjam.setNamaJaminan(rs.getString("nama_jaminan"));
                 anggotapinjam.setTglPinjam(rs.getDate("tgl_pinjam"));
                 anggotapinjam.setNominalPinjam(rs.getInt("nominal_pinjam"));
                 anggotapinjam.setJangkaWaktu(rs.getInt("jangka_waktu"));

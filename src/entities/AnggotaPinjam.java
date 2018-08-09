@@ -23,16 +23,23 @@ public class AnggotaPinjam {
     public AnggotaPinjam() {
     }
 
-    public AnggotaPinjam(String kdAnggotaP, String kdAnggota, String kdKaryawan, String namaJaminan, Date tglPinjam, int nominalPinjam, int jangkaWaktu) {
-        this.kdAnggotaP = kdAnggotaP;
+    public AnggotaPinjam( String kdAnggota, String kdKaryawan, String namaJaminan, int nominalPinjam, int jangkaWaktu) {
+       
         this.kdAnggota = kdAnggota;
         this.kdKaryawan = kdKaryawan;
         this.namaJaminan = namaJaminan;
-        this.tglPinjam = tglPinjam;
         this.nominalPinjam = nominalPinjam;
         this.jangkaWaktu = jangkaWaktu;
     }
 
+    public AnggotaPinjam(String kdAnggotaP, String kdAnggota, String kdKaryawan, String namaJaminan) {
+        this.kdAnggotaP = kdAnggotaP;
+        this.kdAnggota = kdAnggota;
+        this.kdKaryawan = kdKaryawan;
+        this.namaJaminan = namaJaminan;
+    }
+
+    
     /**
      * @return the kdAnggotaP
      */

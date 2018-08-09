@@ -14,11 +14,7 @@ import java.util.List;
  * @author iqbael17
  */
 public interface SimpananInterfaceDAO {
-    public boolean insert(Simpanan simpanan);
-    public boolean update(Simpanan simpanan);
-    public boolean delete(String id);
     public List<Simpanan> getAll();
     public List<Simpanan> getAll(String category,String sort);
     public List<Simpanan> search(String category,String data);
-    public Simpanan getById(String id);
 }

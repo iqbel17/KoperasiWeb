@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller;
+package controllers;
 
 import entities.AngsuranPinjam;
 import java.sql.Date;
@@ -14,7 +14,7 @@ import java.util.List;
  * @author Gusma
  */
 public interface AngsuranPinjamInterfaceController {
-    public boolean save(String kdAngsuran, String kdAnggotaP,  Date tglAngsur, int jumlahAngsuran, String status);
+    public boolean save(String kdAngsuran, String kdAnggota);
 
     public boolean edit(String kdAngsuran, String kdAnggotaP,  Date tglAngsur, int jumlahAngsuran, String status);
 

@@ -5,7 +5,6 @@
  */
 package daos;
 
-
 import entities.Simpanan;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -20,73 +19,19 @@ import java.util.logging.Logger;
  *
  * @author iqbael17
  */
-public class SimpananDAO implements SimpananInterfaceDAO{
-private Connection connection;
-    
+public class SimpananDAO implements SimpananInterfaceDAO {
+
+    private Connection connection;
+
     public SimpananDAO(Connection connection) {
         this.connection = connection;
     }
     
     
-    
-    
-    @Override
-    public boolean insert(Simpanan simpanan) {
-          boolean flag = false;
-        String query = "INSERT INTO Simpanan VALUES(?,?)";
-        try {
-
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, simpanan.getKdSimpanan());
-            preparedStatement.setInt(2, simpanan.getTotalSimpan());
-   
-            preparedStatement.executeUpdate();
-            flag = true;
-        } catch (SQLException ex) {
-            Logger.getLogger(AnggotaDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return flag;
-    
-    }
-
-    @Override
-    public boolean update(Simpanan simpanan) {
-       try {
-            String query = "UPDATE Simpanan SET jumlah_simpanan=?," 
-                    + " WHERE kd_simpanan=?";
-
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-
-            preparedStatement.setInt(1, simpanan.getTotalSimpan());
-            preparedStatement.setString(2, simpanan.getKdSimpanan());
-                    preparedStatement.execute();
-
-            return true;
-        } catch (SQLException ex) {
-            Logger.getLogger(AnggotaDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return false;
-    
-    }
-
-    @Override
-    public boolean delete(String id) {
-       try {
-            String query = "DELETE FROM Simpanan Where kd_simpanan=?";
-
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, id);
-            preparedStatement.executeUpdate();
-            return true;
-        } catch (SQLException ex) {
-            Logger.getLogger(AnggotaDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return false;
-    }
-
+       
     @Override
     public List<Simpanan> getAll() {
-          List<Simpanan> datas = new ArrayList<>();
+        List<Simpanan> datas = new ArrayList<>();
         String query = "SELECT *From Simpanan";
         try {
 
@@ -109,15 +54,15 @@ private Connection connection;
 
     @Override
     public List<Simpanan> getAll(String category, String sort) {
-    List<Simpanan> datas = new ArrayList<>();
+        List<Simpanan> datas = new ArrayList<>();
         String query = "SELECT *FROM Simpanan ORDER BY " + category + " " + sort;
-       try {
+        try {
 
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             ResultSet rs = preparedStatement.executeQuery();
 
             while (rs.next()) {
-            Simpanan simpanan = new Simpanan();
+                Simpanan simpanan = new Simpanan();
                 simpanan.setKdSimpanan(rs.getString(1));
                 simpanan.setTotalSimpan(rs.getInt(2));
                 datas.add(simpanan);
@@ -128,8 +73,6 @@ private Connection connection;
         }
         return datas;
     }
-    
-    
 
     @Override
     public List<Simpanan> search(String category, String data) {
@@ -141,7 +84,7 @@ private Connection connection;
             ResultSet rs = preparedStatement.executeQuery();
 
             while (rs.next()) {
-            Simpanan simpanan = new Simpanan();
+                Simpanan simpanan = new Simpanan();
                 simpanan.setKdSimpanan(rs.getString(1));
                 simpanan.setTotalSimpan(rs.getInt(2));
                 datas.add(simpanan);
@@ -151,29 +94,7 @@ private Connection connection;
             Logger.getLogger(AnggotaDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return datas;
-        
+
     }
 
-    @Override
-    public Simpanan getById(String id) {
-         Simpanan simpanan = new Simpanan();
-        String query = "SELECT *FROM Simpanan WHERE kd_simpanan = '" + id + "'";  
-    try {
-
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            ResultSet rs = preparedStatement.executeQuery();
-
-            while (rs.next()) {
-                simpanan.setKdSimpanan(rs.getString(1));
-                simpanan.setTotalSimpan(rs.getInt(2));
-                
-            }
-
-        } catch (SQLException ex) {
-            Logger.getLogger(AnggotaDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return simpanan;
-    
-    }
-    
 }

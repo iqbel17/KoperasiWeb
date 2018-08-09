@@ -18,52 +18,47 @@ import java.util.List;
  *
  * @author iqbael17
  */
-public class AnggotaSimpanController implements AnggotaSimpanInterfaceController{
+public class AnggotaSimpanController implements AnggotaSimpanInterfaceController {
+
     private AnggotaSimpanDAO asdao;
 
     public AnggotaSimpanController(Connection connection) {
         this.asdao = new AnggotaSimpanDAO(connection);
     }
-    
-    
-    
-    
-    @Override
-    public boolean save(String kdAnggotasimpan, String kdSimpanan, String kdAnggota, String kdKaryawan, String tglSimpan, String nominal) {
-                return this.asdao.insert(new AnggotaSimpan( kdAnggotasimpan,kdSimpanan,kdAnggota,kdKaryawan,java.sql.Date.valueOf(tglSimpan),Integer.parseInt(nominal)));
-}
 
     @Override
-    public boolean edit(String kdAnggotasimpan, String kdSimpanan, String kdAnggota, String kdKaryawan, String tglSimpan, String nominal) {
-                return this.asdao.update(new AnggotaSimpan( kdAnggotasimpan,kdSimpanan,kdAnggota,kdKaryawan,java.sql.Date.valueOf(tglSimpan),Integer.parseInt(nominal)));  }
+    public boolean save(String kdAnggotasimpan, String kdAnggota, String kdKaryawan, String nominal) {
+        return this.asdao.insert(new AnggotaSimpan(kdAnggotasimpan, kdAnggota, kdKaryawan, Integer.parseInt(nominal)));
+    }
+
+    @Override
+    public boolean edit(String kdAnggotasimpan, String kdAnggota, String kdKaryawan, String nominal) {
+        return this.asdao.update(new AnggotaSimpan(kdAnggotasimpan, kdAnggota, kdKaryawan, Integer.parseInt(nominal)));
+    }
 
     @Override
     public boolean drop(String id) {
-  return this.asdao.delete(id);
- 
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public List<AnggotaSimpan> binding() {
-             return this.asdao.getAll();
-   
+        return this.asdao.getAll();
     }
 
     @Override
     public List<AnggotaSimpan> bindingsort(String category, String sort) {
         return this.asdao.getAll(category, sort);
-   
-     }
+    }
 
     @Override
     public List<AnggotaSimpan> find(String category, String Data) {
-          return this.asdao.getAll(category, Data);
-   }
+        return this.asdao.search(category, Data);
+    }
 
     @Override
     public AnggotaSimpan findbyId(String id) {
-           return this.asdao.getById(id); 
-   
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
 }

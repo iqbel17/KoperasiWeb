@@ -25,20 +25,12 @@ private SimpananDAO sdao;
         this.sdao = new SimpananDAO(connection);
     }
 
-    @Override
-    public boolean save(String kdmasukkoperasi,String kdSimpan ,String tglMasuk ,String nominalMasuk, String namaPemasukan) {
-        return this.pkdao.insert(new Pemasukankoperasi(kdmasukkoperasi,kdSimpan,java.sql.Date.valueOf(tglMasuk),Integer.parseInt(nominalMasuk), namaPemasukan));
-  }
-
+ 
     @Override
     public boolean edit(String kdmasukKoperasi, String namaPemasukan) {
         return this.pkdao.update(new Pemasukankoperasi(kdmasukKoperasi, namaPemasukan));
   }  
 
-    @Override
-    public boolean drop(String id) {
-     return this.pkdao.delete(id);
-  } 
 
 
     @Override
@@ -53,7 +45,7 @@ private SimpananDAO sdao;
 
     @Override
     public List<Pemasukankoperasi> find(String category, String Data) {
-          return this.pkdao.getAll(category, Data);
+          return this.pkdao.search(category, Data);
    }
 
     @Override
@@ -61,6 +53,11 @@ private SimpananDAO sdao;
           return this.pkdao.getById(id);
    
     }
+
+    @Override
+    public boolean save(String kdmasukkoperasi, String namaPemasukan, String nominalMasuk) {
+        return this.pkdao.insert(new Pemasukankoperasi(kdmasukkoperasi,namaPemasukan,Integer.parseInt(nominalMasuk)));
+                }
     
     
     

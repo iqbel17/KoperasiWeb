@@ -15,9 +15,8 @@ public class Anggota {
  private String telepon;
  private String alamat;
 
- 
-    public Anggota(String kdAnggota, String nmAnggota, String telepon, String alamat) {
-        this.kdAnggota = kdAnggota;
+
+    public Anggota(String nmAnggota, String telepon, String alamat) {
         this.nmAnggota = nmAnggota;
         this.telepon = telepon;
         this.alamat = alamat;

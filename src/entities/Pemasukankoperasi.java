@@ -12,29 +12,26 @@ import java.sql.Date;
  * @author iqbael17
  */
 public class Pemasukankoperasi {
+
     private String kdMasukkoperasi;
     private String kdSimpanan;
+    private String nmPemasukan;
     private Date tglSimpankoperasi;
     private int nominalsimpan;
-    private String nmPemasukan;
+
+    public Pemasukankoperasi(String kdMasukkoperasi, String nmPemasukan, int nominalsimpan) {
+        this.kdMasukkoperasi = kdMasukkoperasi;
+        this.nmPemasukan = nmPemasukan;
+        this.nominalsimpan = nominalsimpan;
+    }
 
     public Pemasukankoperasi(String kdMasukkoperasi, String nmPemasukan) {
         this.kdMasukkoperasi = kdMasukkoperasi;
         this.nmPemasukan = nmPemasukan;
     }
 
-    public Pemasukankoperasi(String kdMasukkoperasi, String kdSimpanan, Date tglSimpankoperasi, int nominalsimpan, String nmPemasukan) {
-        this.kdMasukkoperasi = kdMasukkoperasi;
-        this.kdSimpanan = kdSimpanan;
-        this.tglSimpankoperasi = tglSimpankoperasi;
-        this.nominalsimpan = nominalsimpan;
-        this.nmPemasukan = nmPemasukan;
-    }
-
-    
     public Pemasukankoperasi() {
     }
-    
 
     /**
      * @return the kdMasukkoperasi
@@ -93,5 +90,5 @@ public class Pemasukankoperasi {
     public void setTglSimpankoperasi(Date tglSimpankoperasi) {
         this.tglSimpankoperasi = tglSimpankoperasi;
     }
-    
+
 }

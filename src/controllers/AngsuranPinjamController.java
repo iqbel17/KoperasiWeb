@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller;
+package controllers;
 
-import dao.AngsuranPinjamDAO;
+import daos.AngsuranPinjamDAO;
 import entities.AngsuranPinjam;
 import java.sql.Connection;
 import java.sql.Date;
@@ -29,8 +29,8 @@ public class AngsuranPinjamController implements AngsuranPinjamInterfaceControll
     
 
     @Override
-    public boolean save(String kdAngsuran, String kdAnggotaP, Date tglAngsur, int jumlahAngsuran, String status) {
-        AngsuranPinjam angsuranPinjam = new AngsuranPinjam(kdAngsuran, kdAnggotaP, tglAngsur, jumlahAngsuran, status);
+    public boolean save(String kdAngsuran, String kdAnggotaP) {
+        AngsuranPinjam angsuranPinjam = new AngsuranPinjam(kdAngsuran, kdAnggotaP);
         return this.angsuranPinjamDAO.insert(angsuranPinjam);
     }
 

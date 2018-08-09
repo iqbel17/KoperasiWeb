@@ -20,49 +20,56 @@ import java.util.logging.Logger;
  *
  * @author iqbael17
  */
-public class AnggotaDAO implements AnggotaInterfaceDAO{
+public class AnggotaDAO implements AnggotaInterfaceDAO {
 
     private Connection connection;
-    
+
     public AnggotaDAO(Connection connection) {
         this.connection = connection;
     }
+
+    /**
+     * fungsi insert anggota menggunakan store prosedur untuk kode anggota
+     * @param anggota 
+     * @return
+     */
     @Override
     public boolean insert(Anggota anggota) {
-    
-        boolean flag = false;
-        String query = "INSERT INTO Anggota VALUES(?,?,?,?)";
-        try {
+//          boolean flag = false;
+//        try {
+//
+//            CallableStatement cs = connection.prepareCall("{ CALL insAngs(?,?) }");
+//            cs.setString(1, angsuranPinjam.getKdAngsuran());
+//            cs.setString(2, angsuranPinjam.getKdAnggotaP());
+//            cs.executeUpdate();
+//            flag = true;
+//        } catch (SQLException ex) {
+//            Logger.getLogger(AnggotaDAO.class.getName()).log(Level.SEVERE, null, ex);
+//
+//        }
+//
+//        return flag;
 
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, anggota.getKdAnggota());
-            preparedStatement.setString(2, anggota.getNmAnggota());
-            preparedStatement.setString(3, anggota.getTelepon());
-            preparedStatement.setString(4, anggota.getAlamat());
-            preparedStatement.executeUpdate();
+        boolean flag = false;
+        try {
+            CallableStatement cs = connection.prepareCall("{ CALL getAutoKDAgt(?,?,?) }");
+            cs.setString(1, anggota.getNmAnggota());
+            cs.setString(2, anggota.getTelepon());
+            cs.setString(3, anggota.getAlamat());
+            cs.executeUpdate();
             flag = true;
         } catch (SQLException ex) {
             Logger.getLogger(AnggotaDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return flag;
-
-//    try {
-//             CallableStatement cs = connection.prepareCall("{ CALL insAnggota(?,?,?,?) }");
-//             cs.setString(1, anggota.getKdAnggota());
-//             cs.setString(2, anggota.getNmAnggota());
-//                          cs.setString(3, anggota.getTelepon());
-//                 
-//                          cs.setString(4, anggota.getAlamat());
-//             cs.executeUpdate();
-//             flag=true;
-//        } catch (SQLException ex) {
-//            Logger.getLogger(AnggotaDAO.class.getName()).log(Level.SEVERE, null, ex);
-//            
-//        }
-//    
-//    return flag;
     }
 
+    /**
+     * fungsi update anggota
+     *
+     * @param anggota
+     * @return
+     */
     @Override
     public boolean update(Anggota anggota) {
         try {
@@ -73,7 +80,7 @@ public class AnggotaDAO implements AnggotaInterfaceDAO{
             PreparedStatement preparedStatement = connection.prepareStatement(query);
 
             preparedStatement.setString(1, anggota.getNmAnggota());
-                preparedStatement.setString(2, anggota.getTelepon());
+            preparedStatement.setString(2, anggota.getTelepon());
             preparedStatement.setString(3, anggota.getAlamat());
             preparedStatement.setString(4, anggota.getKdAnggota());
             preparedStatement.execute();
@@ -83,12 +90,18 @@ public class AnggotaDAO implements AnggotaInterfaceDAO{
             Logger.getLogger(AnggotaDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
-    
+
     }
 
+    /**
+     * fungsi delete anggota berdasarkan kode anggota
+     *
+     * @param id
+     * @return
+     */
     @Override
     public boolean delete(String id) {
-          try {
+        try {
             String query = "DELETE FROM Anggota Where kd_anggota=?";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, id);
@@ -98,8 +111,13 @@ public class AnggotaDAO implements AnggotaInterfaceDAO{
             Logger.getLogger(AnggotaDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
-     }
+    }
 
+    /**
+     * fungsi menampilkan data anggota
+     *
+     * @return
+     */
     @Override
     public List<Anggota> getAll() {
         List<Anggota> datas = new ArrayList<>();
@@ -123,11 +141,19 @@ public class AnggotaDAO implements AnggotaInterfaceDAO{
         }
 
         return datas;
-        
+
     }
+
+    /**
+     * fungsi menampilkan data berdasarkan asc atau desc
+     *
+     * @param category 
+     * @param sort
+     * @return
+     */
     @Override
     public List<Anggota> getAll(String category, String sort) {
-       List<Anggota> datas = new ArrayList<>();
+        List<Anggota> datas = new ArrayList<>();
         String query = "SELECT *FROM Anggota ORDER BY " + category + " " + sort;
         try {
 
@@ -149,17 +175,24 @@ public class AnggotaDAO implements AnggotaInterfaceDAO{
         return datas;
     }
 
+    /**
+     * fungsi pencarian data anggota
+     *
+     * @param category
+     * @param data
+     * @return
+     */
     @Override
     public List<Anggota> search(String category, String data) {
-    List<Anggota> datas = new ArrayList<>();
+        List<Anggota> datas = new ArrayList<>();
         String query = "SELECT *FROM Anggota WHERE " + category + " " + " like '%" + data + "%'";
-         try {
+        try {
 
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             ResultSet rs = preparedStatement.executeQuery();
 
             while (rs.next()) {
-                  Anggota anggota = new Anggota();
+                Anggota anggota = new Anggota();
                 anggota.setKdAnggota(rs.getString(1));
                 anggota.setNmAnggota(rs.getString(2));
                 anggota.setTelepon(rs.getString(3));
@@ -175,9 +208,9 @@ public class AnggotaDAO implements AnggotaInterfaceDAO{
 
     @Override
     public Anggota getById(String id) {
-     Anggota anggota = new Anggota();
-        String query = "SELECT *FROM Anggota WHERE kd_anggota = '" + id + "'"; 
-         try {
+        Anggota anggota = new Anggota();
+        String query = "SELECT *FROM Anggota WHERE kd_anggota = '" + id + "'";
+        try {
 
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             ResultSet rs = preparedStatement.executeQuery();
@@ -194,5 +227,5 @@ public class AnggotaDAO implements AnggotaInterfaceDAO{
         }
         return anggota;
     }
-    
+
 }

@@ -6,6 +6,7 @@
 package views;
 
 import com.sun.glass.events.KeyEvent;
+import controllers.KaryawanController;
 import entities.SessionLogin;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -20,6 +21,7 @@ import tools.MyConnection;
 public class LoginKoperasi extends javax.swing.JFrame {
 
     private Connection connection;
+    private KaryawanController karyawanController;
 
     /**
      * Creates new form LoginKoperasi
@@ -27,6 +29,7 @@ public class LoginKoperasi extends javax.swing.JFrame {
     public LoginKoperasi() {
         initComponents();
         this.connection = new MyConnection().getConnection();
+        this.karyawanController = new KaryawanController(new MyConnection().getConnection());
     }
 
     /**
@@ -46,6 +49,7 @@ public class LoginKoperasi extends javax.swing.JFrame {
         btnLogin = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Login Koperasi");
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Login Form"));
 
@@ -76,7 +80,9 @@ public class LoginKoperasi extends javax.swing.JFrame {
                     .addComponent(jLabel2))
                 .addGap(30, 30, 30)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnLogin)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(btnLogin))
                     .addComponent(txtKdkaryawan, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtPass, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(47, Short.MAX_VALUE))
@@ -92,9 +98,9 @@ public class LoginKoperasi extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(txtPass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnLogin)
-                .addContainerGap(23, Short.MAX_VALUE))
+                .addContainerGap(41, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -118,9 +124,53 @@ public class LoginKoperasi extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-      
-      
-      
+    
+//       SessionLogin sessionLogin = new SessionLogin();      
+//            String kdKry = txtKdkaryawan.getText();
+//            String passW = txtPass.getText();
+//            String message = "Failed to login data";
+//        boolean flag = this.karyawanController.getLogins(kdKry, passW);
+//        if(flag){
+//            sessionLogin.setUserLogin(kdKry);
+//                    JOptionPane.showMessageDialog(null, "Login sukses");
+//                    dispose();
+//                    MainForm mainForm = new MainForm();
+//                    mainForm.setVisible(true);
+//        
+//        }else{
+//            JOptionPane.showMessageDialog(null, message);
+//    }
+// 
+try {
+            SessionLogin sessionLogin = new SessionLogin();
+                    
+            String kdKry = txtKdkaryawan.getText();
+            String passW = txtPass.getText();
+            
+            String query = "SELECT *From karyawan where kd_karyawan='" + kdKry + "' and password='" +passW + "'";
+            
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            ResultSet rs = preparedStatement.executeQuery();
+            if (rs.next()) {
+                if (kdKry.equals(rs.getString("kd_karyawan")) && passW.equals(rs.getString("password"))) {
+                    sessionLogin.setUserLogin(kdKry);
+                    JOptionPane.showMessageDialog(null, "Login sukses");
+                    dispose();
+                    MainForm mainForm = new MainForm();
+                    mainForm.setVisible(true);
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "username atau password salah");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+
+    }//GEN-LAST:event_btnLoginActionPerformed
+
+    private void txtPassKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPassKeyPressed
+        // TODO add your handling code here:
+        if(evt.getKeyCode()==KeyEvent.VK_ENTER){
         try {
             SessionLogin sessionLogin = new SessionLogin();
                     
@@ -128,6 +178,7 @@ public class LoginKoperasi extends javax.swing.JFrame {
             String passW = txtPass.getText();
             String query = "SELECT *From karyawan where kd_karyawan='" + kdKry + "' and password='" +passW + "'";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
+            
             ResultSet rs = preparedStatement.executeQuery();
             if (rs.next()) {
                 if (kdKry.equals(rs.getString("kd_karyawan")) && passW.equals(rs.getString("password"))) {
@@ -143,37 +194,6 @@ public class LoginKoperasi extends javax.swing.JFrame {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnLoginActionPerformed
-
-    private void txtPassKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPassKeyPressed
-
-        // TODO add your handling code here:
-        
-        if(evt.getKeyCode()==KeyEvent.VK_ENTER){
-         try {
-            SessionLogin sessionLogin = new SessionLogin();
-                    
-            String kdKry = txtKdkaryawan.getText();
-            String passW = txtPass.getText();
-            String query = "SELECT *From karyawan where kd_karyawan='" + kdKry + "' and password='" +passW + "'";
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            ResultSet rs = preparedStatement.executeQuery();
-            if (rs.next()) {
-                if (kdKry.equals(rs.getString("kd_karyawan")) && passW.equals(rs.getString("password"))) {
-                    sessionLogin.setUserLogin(kdKry);
-                    JOptionPane.showMessageDialog(null, "Login sukses");
-                    dispose();
-                    MainForm mainForm = new MainForm();
-                    mainForm.setVisible(true);
-                }
-            } else {
-                JOptionPane.showMessageDialog(null, "username atau password salah");
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
-        }
-        
         }    
     }//GEN-LAST:event_txtPassKeyPressed
 

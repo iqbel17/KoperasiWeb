@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 package tools;
-import controller.AnggotaPinjamController;
+import controllers.AnggotaPinjamController;
 import controllers.AnggotaController;
 import entities.Anggota;
 import java.sql.Connection;

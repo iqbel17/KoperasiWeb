@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller;
+package controllers;
 
-import dao.KaryawanDAO;
+import daos.KaryawanDAO;
 import entities.Karyawan;
 import java.sql.Connection;
 import java.util.List;
@@ -62,5 +62,12 @@ public class KaryawanController implements KaryawanInterfaceController {
     public Karyawan findBy(String id) {
         return this.karyawanDAO.getById(id);
     }
+
+    @Override
+    public boolean getLogins(String kdLogin, String PassLogin) {
+         return this.karyawanDAO.getLogin(kdLogin, PassLogin);
+       }
+
+    
 
 }

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controller;
+package controllers;
 
 import entities.Karyawan;
 import java.util.List;
@@ -27,4 +27,5 @@ public interface KaryawanInterfaceController {
     public List<Karyawan> find(String category, String data);
 
     public Karyawan findBy(String id);
+    public boolean getLogins(String kdLogin, String PassLogin);
 }

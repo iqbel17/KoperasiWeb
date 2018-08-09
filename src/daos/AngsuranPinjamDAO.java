@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package dao;
+package daos;
 
 import entities.AngsuranPinjam;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -26,25 +27,30 @@ public class AngsuranPinjamDAO implements AngsuranPinjamInterfaceDAO {
     public AngsuranPinjamDAO(Connection connection) {
         this.connection = connection;
     }
-
+    
+    
+        /**
+         * fungsi insert ke dalam tabel angsuran  menggunakan store procedure
+         * @param angsuranPinjam
+         * @return 
+         */
     @Override
     public boolean insert(entities.AngsuranPinjam angsuranPinjam) {
         boolean flag = false;
-        String query = "INSERT INTO ANGSURANPINJAM VALUES (?,?,?,?,?)";
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, angsuranPinjam.getKdAngsuran());
-            preparedStatement.setString(2, angsuranPinjam.getKdAnggotaP());
-            preparedStatement.setDate(3, angsuranPinjam.getTglAngsur());
-            preparedStatement.setInt(4, angsuranPinjam.getJumlahAngsuran());
-            preparedStatement.setString(5, angsuranPinjam.getStatus());
 
-            preparedStatement.executeUpdate();
+            CallableStatement cs = connection.prepareCall("{ CALL insAngs(?,?) }");
+            cs.setString(1, angsuranPinjam.getKdAngsuran());
+            cs.setString(2, angsuranPinjam.getKdAnggotaP());
+            cs.executeUpdate();
             flag = true;
         } catch (SQLException ex) {
-            Logger.getLogger(AnggotaPinjamDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AnggotaDAO.class.getName()).log(Level.SEVERE, null, ex);
+
         }
+
         return flag;
+
     }
 
     @Override
@@ -90,10 +96,10 @@ public class AngsuranPinjamDAO implements AngsuranPinjamInterfaceDAO {
             while (rs.next()) {
                 AngsuranPinjam angsuranPinjam = new AngsuranPinjam();
                 angsuranPinjam.setKdAngsuran(rs.getString("kd_angsuran"));
-                angsuranPinjam.setKdAnggotaP(rs.getString("kd_anggota"));
-                angsuranPinjam.setTglAngsur(rs.getDate("kd_karyawan"));
-                angsuranPinjam.setJumlahAngsuran(rs.getInt("nama_pinjaman"));
-                angsuranPinjam.setStatus(rs.getString("tgl_pinjam"));
+                angsuranPinjam.setKdAnggotaP(rs.getString("kd_anggotapinjam"));
+                angsuranPinjam.setTglAngsur(rs.getDate("tanggal_angsur"));
+                angsuranPinjam.setJumlahAngsuran(rs.getInt("jumlah_angsuran"));
+                angsuranPinjam.setStatus(rs.getString("status"));
                 datas.add(angsuranPinjam);
             }
 
@@ -135,10 +141,10 @@ public class AngsuranPinjamDAO implements AngsuranPinjamInterfaceDAO {
             while (rs.next()) {
                 AngsuranPinjam angsuranPinjam = new AngsuranPinjam();
                 angsuranPinjam.setKdAngsuran(rs.getString("kd_angsuran"));
-                angsuranPinjam.setKdAnggotaP(rs.getString("kd_anggota"));
-                angsuranPinjam.setTglAngsur(rs.getDate("kd_karyawan"));
-                angsuranPinjam.setJumlahAngsuran(rs.getInt("nama_pinjaman"));
-                angsuranPinjam.setStatus(rs.getString("tgl_pinjam"));
+                angsuranPinjam.setKdAnggotaP(rs.getString("kd_anggotapinjam"));
+                angsuranPinjam.setTglAngsur(rs.getDate("tanggal_angsur"));
+                angsuranPinjam.setJumlahAngsuran(rs.getInt("jumlah_angsuran"));
+                angsuranPinjam.setStatus(rs.getString("status"));
                 datas.add(angsuranPinjam);
             }
         } catch (SQLException ex) {
@@ -149,7 +155,7 @@ public class AngsuranPinjamDAO implements AngsuranPinjamInterfaceDAO {
 
     @Override
     public entities.AngsuranPinjam getById(String id) {
-         AngsuranPinjam angsuranPinjam = new AngsuranPinjam();
+        AngsuranPinjam angsuranPinjam = new AngsuranPinjam();
         String query = "SELECT * FROM angsuranpinjam WHERE kd_angsuran=" + id;
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -159,9 +165,9 @@ public class AngsuranPinjamDAO implements AngsuranPinjamInterfaceDAO {
                 angsuranPinjam.setKdAnggotaP(rs.getString("kd_anggota"));
                 angsuranPinjam.setTglAngsur(rs.getDate("kd_karyawan"));
                 angsuranPinjam.setJumlahAngsuran(rs.getInt("nama_pinjaman"));
-                angsuranPinjam.setStatus(rs.getString("tgl_pinjam"));   
+                angsuranPinjam.setStatus(rs.getString("tgl_pinjam"));
             }
-        }catch (SQLException ex) {
+        } catch (SQLException ex) {
             Logger.getLogger(AnggotaPinjamDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return angsuranPinjam;

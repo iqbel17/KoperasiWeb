@@ -6,8 +6,12 @@
 package views;
 
 import controllers.AnggotaSimpanController;
+import controllers.SimpananController;
 import entities.AnggotaSimpan;
+import entities.SessionLogin;
+import entities.Simpanan;
 import java.sql.Connection;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -15,17 +19,26 @@ import javax.swing.table.DefaultTableModel;
  * @author iqbael17
  */
 public class AnggotaSimpanView extends javax.swing.JInternalFrame {
-    private Connection connection;
 
+    private Connection connection;
+    private SessionLogin sessionLogin;
     private AnggotaSimpanController anggotaSimpanController;
+    private SimpananController simpananController;
+
     /**
      * Creates new form AnggotaSImpanView
      */
     public AnggotaSimpanView(Connection connection) {
-           this.connection = connection;
+        this.connection = connection;
         initComponents();
         this.anggotaSimpanController = new AnggotaSimpanController(connection);
+        this.simpananController = new SimpananController(connection);
+        this.sessionLogin = new SessionLogin();
+        lblKaryawan.setText(SessionLogin.getUserLogin());
+        btnEdit.setEnabled(false);
         bindingTable();
+        cekSaldo();
+
     }
 
     /**
@@ -41,18 +54,23 @@ public class AnggotaSimpanView extends javax.swing.JInternalFrame {
         tblAnggotaSimpan = new javax.swing.JTable();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        txtAnggotaSimpan = new javax.swing.JTextField();
+        txtkdAnggotaSimpan = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         txtkdAnggota = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         txtNominal = new javax.swing.JTextField();
         btnSave = new javax.swing.JButton();
-        btnDrop = new javax.swing.JButton();
+        btnEdit = new javax.swing.JButton();
         cmbCatagtpinjam = new javax.swing.JComboBox<>();
-        jTextField1 = new javax.swing.JTextField();
+        txtCariAnggotaSimpan = new javax.swing.JTextField();
         btnFind = new javax.swing.JButton();
+        jLabel4 = new javax.swing.JLabel();
+        lblKaryawan = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tblSaldo = new javax.swing.JTable();
 
         setClosable(true);
+        setTitle("Anggota Simpan");
 
         tblAnggotaSimpan.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -81,8 +99,18 @@ public class AnggotaSimpanView extends javax.swing.JInternalFrame {
         jLabel3.setText("Nominal");
 
         btnSave.setText("Save");
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
 
-        btnDrop.setText("Drop");
+        btnEdit.setText("Edit");
+        btnEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -95,17 +123,18 @@ public class AnggotaSimpanView extends javax.swing.JInternalFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
                             .addComponent(jLabel2)
-                            .addComponent(jLabel3)))
+                            .addComponent(jLabel3))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(txtkdAnggota, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
+                                .addComponent(txtkdAnggotaSimpan))
+                            .addComponent(txtNominal, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(34, 34, 34)
-                        .addComponent(btnSave)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnDrop)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(txtkdAnggota, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
-                        .addComponent(txtAnggotaSimpan))
-                    .addComponent(txtNominal, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btnSave)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnEdit)))
                 .addContainerGap(47, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -114,7 +143,7 @@ public class AnggotaSimpanView extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(txtAnggotaSimpan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtkdAnggotaSimpan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2)
@@ -126,44 +155,89 @@ public class AnggotaSimpanView extends javax.swing.JInternalFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSave)
-                    .addComponent(btnDrop))
+                    .addComponent(btnEdit))
                 .addGap(33, 33, 33))
         );
 
-        cmbCatagtpinjam.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cmbCatagtpinjam.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "kd_anggotasimpan", "kd_anggota", "tgl_simpan", "nominal" }));
+        cmbCatagtpinjam.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbCatagtpinjamActionPerformed(evt);
+            }
+        });
 
         btnFind.setText("Find");
+        btnFind.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFindActionPerformed(evt);
+            }
+        });
+
+        jLabel4.setText("Kode Karyawan ");
+
+        lblKaryawan.setText("jLabel5");
+
+        tblSaldo.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {},
+                {},
+                {},
+                {}
+            },
+            new String [] {
+
+            }
+        ));
+        tblSaldo.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblSaldoMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(tblSaldo);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(33, 33, 33)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(cmbCatagtpinjam, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnFind))
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 308, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 45, Short.MAX_VALUE))
+                        .addGap(22, 22, 22)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addGap(75, 75, 75)
+                                .addComponent(lblKaryawan))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 308, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(cmbCatagtpinjam, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtCariAnggotaSimpan, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnFind))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(123, 123, 123)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 31, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(27, 27, 27)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(lblKaryawan))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cmbCatagtpinjam, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtCariAnggotaSimpan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnFind))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
@@ -171,37 +245,122 @@ public class AnggotaSimpanView extends javax.swing.JInternalFrame {
 
     private void tblAnggotaSimpanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblAnggotaSimpanMouseClicked
         // TODO add your handling code here:
+        int row = tblAnggotaSimpan.getSelectedRow();
+
+        txtkdAnggotaSimpan.setText(tblAnggotaSimpan.getValueAt(row, 0).toString());
+        txtkdAnggota.setText(tblAnggotaSimpan.getValueAt(row, 1).toString());
+        txtNominal.setText(tblAnggotaSimpan.getValueAt(row, 3).toString());
+        txtNominal.setEnabled(false);
+        btnEdit.setEnabled(true);
+        btnSave.setEnabled(false);
     }//GEN-LAST:event_tblAnggotaSimpanMouseClicked
+
+    private void cmbCatagtpinjamActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbCatagtpinjamActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbCatagtpinjamActionPerformed
+
+    private void btnFindActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFindActionPerformed
+        // TODO add your handling code here:
+        SearchTable(cmbCatagtpinjam.getSelectedItem().toString(), txtCariAnggotaSimpan.getText());
+    }//GEN-LAST:event_btnFindActionPerformed
+
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        // TODO add your handling code here:
+        boolean flag = this.anggotaSimpanController.save(txtkdAnggotaSimpan.getText(), txtkdAnggota.getText(), lblKaryawan.getText(), txtNominal.getText());
+        String message = "Failed to save data";
+        if (flag) {
+            message = "succes save";
+        }
+        JOptionPane.showMessageDialog(this, message, "Allert/Notification", JOptionPane.INFORMATION_MESSAGE);
+        bindingTable();
+        cekSaldo();
+        reset();
+    }//GEN-LAST:event_btnSaveActionPerformed
+
+    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
+        // TODO add your handling code here:
+
+        String message = "Failed to edit data";
+        if (anggotaSimpanController.edit(txtkdAnggotaSimpan.getText(), txtkdAnggota.getText(), lblKaryawan.getText(), txtNominal.getText())) {
+            message = "Succes to edit data";
+        }
+        JOptionPane.showMessageDialog(this, message, "Notification", JOptionPane.ERROR_MESSAGE);
+        bindingTable();
+        cekSaldo();
+        reset();
+    }//GEN-LAST:event_btnEditActionPerformed
+
+    private void tblSaldoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblSaldoMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tblSaldoMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnDrop;
+    private javax.swing.JButton btnEdit;
     private javax.swing.JButton btnFind;
     private javax.swing.JButton btnSave;
     private javax.swing.JComboBox<String> cmbCatagtpinjam;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel lblKaryawan;
     private javax.swing.JTable tblAnggotaSimpan;
-    private javax.swing.JTextField txtAnggotaSimpan;
+    private javax.swing.JTable tblSaldo;
+    private javax.swing.JTextField txtCariAnggotaSimpan;
     private javax.swing.JTextField txtNominal;
     private javax.swing.JTextField txtkdAnggota;
+    private javax.swing.JTextField txtkdAnggotaSimpan;
     // End of variables declaration//GEN-END:variables
-public void bindingTable() {
+public void cekSaldo() {
+        String[] header = {"Jumlah Saldo"};
+        DefaultTableModel defaultTableModel = new DefaultTableModel(header, 0);
+        for (Simpanan simpanan : simpananController.binding()) {
+            Object[] region1 = {
+                simpanan.getTotalSimpan()
+            };
+            defaultTableModel.addRow(region1);
+        }
+
+        tblSaldo.setModel(defaultTableModel);
+    }
+
+    public void bindingTable() {
 
         String[] header = {"Kode Anggota Simpan", "kode Anggota", "Tanggal Simpan", "Nominal"};
 
         DefaultTableModel defaultTableModel = new DefaultTableModel(header, 0);
-        for (AnggotaSimpan anggotaSimpan: anggotaSimpanController.binding()) {
+        for (AnggotaSimpan anggotaSimpan : anggotaSimpanController.binding()) {
             Object[] region1 = {
                 anggotaSimpan.getKdAnggotaSimpan(), anggotaSimpan.getKdAnggota(), anggotaSimpan.getTglSimpan(), anggotaSimpan.getNominal()
             };
             defaultTableModel.addRow(region1);
         }
-      tblAnggotaSimpan.setModel(defaultTableModel);
+        tblAnggotaSimpan.setModel(defaultTableModel);
+
+    }
+
+    private void SearchTable(String category, String data) {
+
+        String[] header = {"Kode Anggota Simpan", "Kode Anggota", " Tanggal Simpan", "Nominal"};
+
+        DefaultTableModel defaultTableModel = new DefaultTableModel(header, 0);
+        for (AnggotaSimpan anggotaSimpan : anggotaSimpanController.find(category, data)) {
+            Object[] region1 = {
+                anggotaSimpan.getKdAnggotaSimpan(), anggotaSimpan.getKdAnggota(), anggotaSimpan.getTglSimpan(), anggotaSimpan.getNominal()
+            };
+            defaultTableModel.addRow(region1);
+        }
+        tblAnggotaSimpan.setModel(defaultTableModel);
+    }
+
+    private void reset() {
+        txtkdAnggotaSimpan.setText("");
+        txtkdAnggota.setText("");
+        txtNominal.setText("");
 
     }
 

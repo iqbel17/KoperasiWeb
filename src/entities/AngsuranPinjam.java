@@ -29,6 +29,11 @@ public class AngsuranPinjam {
         this.status = status;
     }
 
+    public AngsuranPinjam(String kdAngsuran, String kdAnggotaP) {
+        this.kdAngsuran = kdAngsuran;
+        this.kdAnggotaP = kdAnggotaP;
+    }
+
     /**
      * @return the kdAngsuran
      */

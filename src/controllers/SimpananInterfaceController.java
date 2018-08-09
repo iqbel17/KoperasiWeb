@@ -13,12 +13,8 @@ import java.util.List;
  * @author iqbael17
  */
 public interface SimpananInterfaceController {
-      public boolean save(String kdSimpanan, String jmlSimpanan);
-    public boolean edit(String kdSimpanan, String jmlSimpanan);
-    public boolean drop (String id);
     public List<Simpanan> binding();
     public List<Simpanan> bindingsort(String category, String sort);
     public List<Simpanan> find(String category, String Data);
-    public Simpanan findbyId(String id);
-
+   
 }

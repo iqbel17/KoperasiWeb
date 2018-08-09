@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package dao;
+package daos;
 
 import entities.Karyawan;
 import java.util.List;
@@ -20,10 +20,14 @@ public interface KaryawanInterfaceDAO {
     public boolean delete(String id);
 
     public List<Karyawan> getAll();
+    
+    public boolean getLogin(String kdKaryawan, String passLogin);
 
     public List<Karyawan> getAllCs(String category, String sort);
 
     public List<Karyawan> search(String category, String data);
 
     public Karyawan getById(String id);
+    
+    
 }

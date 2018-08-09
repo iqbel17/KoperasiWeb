@@ -22,14 +22,17 @@ public class AnggotaSimpan {
     public AnggotaSimpan() {
     }
 
-    public AnggotaSimpan(String kdAnggotaSimpan, String kdSimpanan, String kdAnggota, String kdKaryawan, Date tglSimpan, int nominal) {
+    public AnggotaSimpan(String kdAnggotaSimpan, String kdAnggota, String kdKaryawan, int nominal) {
         this.kdAnggotaSimpan = kdAnggotaSimpan;
-        this.kdSimpanan = kdSimpanan;
         this.kdAnggota = kdAnggota;
         this.kdKaryawan = kdKaryawan;
-        this.tglSimpan = tglSimpan;
         this.nominal = nominal;
     }
+
+    
+   
+
+   
 
     public void setKdAnggotaSimpan(String kdAnggotaSimpan) {
         this.kdAnggotaSimpan = kdAnggotaSimpan;

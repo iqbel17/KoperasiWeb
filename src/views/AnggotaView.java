@@ -8,6 +8,7 @@ package views;
 import controllers.AnggotaController;
 import entities.Anggota;
 import java.sql.Connection;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -28,6 +29,9 @@ public class AnggotaView extends javax.swing.JInternalFrame {
         initComponents();
         this.anggotaController = new AnggotaController(connection);
         bindingTable();
+        btnDrop.setEnabled(false);
+        btnedit.setEnabled(false);
+        txtKdAnggota.setEnabled(false);
 
     }
 
@@ -53,12 +57,14 @@ public class AnggotaView extends javax.swing.JInternalFrame {
         txtAlamat = new javax.swing.JTextField();
         btnSave = new javax.swing.JButton();
         btnDrop = new javax.swing.JButton();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jTextField1 = new javax.swing.JTextField();
+        btnedit = new javax.swing.JButton();
+        cmbCariAnggota = new javax.swing.JComboBox<>();
+        txtCariAnggota = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
 
         setClosable(true);
         setIconifiable(true);
+        setTitle("Anggota");
 
         tblAnggota.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -101,11 +107,23 @@ public class AnggotaView extends javax.swing.JInternalFrame {
         jLabel4.setText("Alamat");
 
         btnSave.setText("Save");
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
 
         btnDrop.setText("Drop");
         btnDrop.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDropActionPerformed(evt);
+            }
+        });
+
+        btnedit.setText("Edit");
+        btnedit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btneditActionPerformed(evt);
             }
         });
 
@@ -133,13 +151,15 @@ public class AnggotaView extends javax.swing.JInternalFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtAlamat, javax.swing.GroupLayout.PREFERRED_SIZE, 281, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtTelepon, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addContainerGap(222, Short.MAX_VALUE))))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnSave)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnedit)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnDrop)
-                .addGap(41, 41, 41))
+                .addGap(32, 32, 32))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -156,25 +176,31 @@ public class AnggotaView extends javax.swing.JInternalFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(txtTelepon, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(txtAlamat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSave)
-                    .addComponent(btnDrop))
+                    .addComponent(btnDrop)
+                    .addComponent(btnedit))
                 .addGap(20, 20, 20))
         );
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "kd_anggota", "nama_anggota", "telepon", "alamat" }));
-        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+        cmbCariAnggota.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "kd_anggota", "nama_anggota", "telepon", "alamat" }));
+        cmbCariAnggota.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox1ActionPerformed(evt);
+                cmbCariAnggotaActionPerformed(evt);
             }
         });
 
         jButton1.setText("Cari");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -188,9 +214,9 @@ public class AnggotaView extends javax.swing.JInternalFrame {
                 .addContainerGap(27, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(cmbCariAnggota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtCariAnggota, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButton1)
                 .addGap(46, 46, 46))
@@ -200,8 +226,8 @@ public class AnggotaView extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmbCariAnggota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtCariAnggota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -228,33 +254,77 @@ public class AnggotaView extends javax.swing.JInternalFrame {
         txtNamaAgt.setText(tblAnggota.getValueAt(row, 1).toString());
         txtTelepon.setText(tblAnggota.getValueAt(row, 2).toString());
         txtAlamat.setText(tblAnggota.getValueAt(row, 3).toString());
-
+         btnSave.setEnabled(false);
+         btnedit.setEnabled(true);
+         btnDrop.setEnabled(true);
+         txtKdAnggota.setEnabled(false);
         // TODO add your handling code here:
     }//GEN-LAST:event_tblAnggotaMouseClicked
 
     private void btnDropActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDropActionPerformed
         // TODO add your handling code here:
+        String message= "Failed to drop data";
+int flag= JOptionPane.showConfirmDialog(this, "realy?" ,"Are U Sure",JOptionPane.YES_NO_OPTION);
+if(flag==0){
+    if(anggotaController.drop(txtKdAnggota.getText())){
+        message ="Succes to drop data....";
+    }
+    JOptionPane.showMessageDialog(this, message,"Notification",JOptionPane.QUESTION_MESSAGE);
+}
+bindingTable();
+reset();
     }//GEN-LAST:event_btnDropActionPerformed
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+    private void cmbCariAnggotaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbCariAnggotaActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox1ActionPerformed
+    }//GEN-LAST:event_cmbCariAnggotaActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    SearchTable(cmbCariAnggota.getSelectedItem().toString(),txtCariAnggota.getText());
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        // TODO add your handling code here:
+          boolean flag = this.anggotaController.save(txtNamaAgt.getText(),txtTelepon.getText(),txtAlamat.getText());
+        String message = "Failed to save data";
+        if (flag) {
+            message = "succes save";
+        }
+        JOptionPane.showMessageDialog(this, message, "Allert/Notification", JOptionPane.INFORMATION_MESSAGE);
+        bindingTable();
+        reset();
+    }//GEN-LAST:event_btnSaveActionPerformed
+
+    private void btneditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btneditActionPerformed
+        // TODO add your handling code here:
+        String message="Failed to edit data";
+if(anggotaController.edit( txtNamaAgt.getText(),txtTelepon.getText(),txtAlamat.getText())){
+    message ="Succes to edit data";
+}
+        JOptionPane.showMessageDialog(this, message,"Notification",JOptionPane.WARNING_MESSAGE);
+        bindingTable();
+        reset();
+
+        
+    }//GEN-LAST:event_btneditActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnDrop;
     private javax.swing.JButton btnSave;
+    private javax.swing.JButton btnedit;
+    private javax.swing.JComboBox<String> cmbCariAnggota;
     private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JTable tblAnggota;
     private javax.swing.JTextField txtAlamat;
+    private javax.swing.JTextField txtCariAnggota;
     private javax.swing.JTextField txtKdAnggota;
     private javax.swing.JTextField txtNamaAgt;
     private javax.swing.JTextField txtTelepon;
@@ -273,5 +343,29 @@ public void bindingTable() {
         tblAnggota.setModel(defaultTableModel);
 
     }
+
+        private void SearchTable(String category,String data) {
+
+        String[] header = {"Kode Anggota", "NamaAnggota, Telepon, Alamat"};
+        
+       
+        DefaultTableModel defaultTableModel = new DefaultTableModel(header, 0);
+        for (Anggota anggota : anggotaController.find (category ,data)) {
+            Object[] region1 = {
+                anggota.getKdAnggota(), anggota.getNmAnggota(),anggota.getNmAnggota(),anggota.getTelepon(), anggota.getTelepon()
+            };
+            defaultTableModel.addRow(region1);
+        }
+        tblAnggota.setModel(defaultTableModel);
+    }
+        
+private void reset(){
+        txtKdAnggota.setText("");
+        txtNamaAgt.setText("");
+        txtTelepon.setText("");
+        txtAlamat.setText("");
+      
+    }
+
 
 }

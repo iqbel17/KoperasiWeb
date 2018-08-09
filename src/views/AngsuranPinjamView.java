@@ -5,17 +5,30 @@
  */
 package views;
 
+import controllers.AngsuranPinjamController;
+import entities.AngsuranPinjam;
+import java.sql.Connection;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Gusma
  */
 public class AngsuranPinjamView extends javax.swing.JInternalFrame {
 
+    private Connection connection;
+    private ViewProccess viewProccess;
+    private AngsuranPinjamController angsuranPinjamController;
+
     /**
      * Creates new form AngsuranPinjamView
      */
-    public AngsuranPinjamView() {
+    public AngsuranPinjamView(Connection connection) {
+        this.connection = connection;
         initComponents();
+        this.angsuranPinjamController = new AngsuranPinjamController(connection);
+        bindingTable();
     }
 
     /**
@@ -32,20 +45,15 @@ public class AngsuranPinjamView extends javax.swing.JInternalFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        textKd = new javax.swing.JTextField();
+        textKdangsur = new javax.swing.JTextField();
         textAnggotaP = new javax.swing.JTextField();
-        textTgl = new javax.swing.JTextField();
-        textJumlah = new javax.swing.JTextField();
-        textStatus = new javax.swing.JTextField();
         btnSave = new javax.swing.JButton();
-        btnEdit = new javax.swing.JButton();
-        btnDrop = new javax.swing.JButton();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        textCari = new javax.swing.JTextField();
+        cmbangsuran = new javax.swing.JComboBox<>();
+        textCariangsuran = new javax.swing.JTextField();
         btnCari = new javax.swing.JButton();
+
+        setClosable(true);
+        setTitle("Angsuran");
 
         tblAngsuran.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -66,17 +74,12 @@ public class AngsuranPinjamView extends javax.swing.JInternalFrame {
 
         jLabel2.setText("KD Anggota Pinjam");
 
-        jLabel3.setText("Tanggal Angsur");
-
-        jLabel4.setText("Jumlah Angsuran");
-
-        jLabel5.setText("Status");
-
         btnSave.setText("Save");
-
-        btnEdit.setText("Edit");
-
-        btnDrop.setText("Drop");
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -85,27 +88,16 @@ public class AngsuranPinjamView extends javax.swing.JInternalFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(btnDrop)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnEdit)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnSave))
+                    .addComponent(btnSave)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel5))
+                            .addComponent(jLabel2))
                         .addGap(28, 28, 28)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(textKd)
-                            .addComponent(textAnggotaP)
-                            .addComponent(textTgl)
-                            .addComponent(textJumlah)
-                            .addComponent(textStatus, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE))))
-                .addContainerGap(26, Short.MAX_VALUE))
+                            .addComponent(textKdangsur, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)
+                            .addComponent(textAnggotaP))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -113,32 +105,24 @@ public class AngsuranPinjamView extends javax.swing.JInternalFrame {
                 .addGap(35, 35, 35)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(textKd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(textKdangsur, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(textAnggotaP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(textTgl, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(textJumlah, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(textStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(30, 30, 30)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnSave)
-                    .addComponent(btnEdit)
-                    .addComponent(btnDrop))
+                .addGap(114, 114, 114)
+                .addComponent(btnSave)
                 .addContainerGap(55, Short.MAX_VALUE))
         );
 
+        cmbangsuran.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "kd_angsuran", "kd_anggotapinjam", "tanggal_angsur", "jumlah_angsuran", "status" }));
+
         btnCari.setText("Cari");
+        btnCari.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCariActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -152,9 +136,9 @@ public class AngsuranPinjamView extends javax.swing.JInternalFrame {
                         .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(cmbangsuran, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(textCari, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(textCariangsuran, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnCari)
                         .addGap(0, 0, Short.MAX_VALUE))))
@@ -164,8 +148,8 @@ public class AngsuranPinjamView extends javax.swing.JInternalFrame {
             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 319, javax.swing.GroupLayout.PREFERRED_SIZE)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(textCari, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmbangsuran, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(textCariangsuran, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnCari))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -174,26 +158,70 @@ public class AngsuranPinjamView extends javax.swing.JInternalFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+       boolean flag = this.angsuranPinjamController.save(textKdangsur.getText(), textAnggotaP.getText());
+        String message = "Failed to save data";
+        if (flag) {
+            message = "succes save";
+        }
+        JOptionPane.showMessageDialog(this, message, "Allert/Notification", JOptionPane.INFORMATION_MESSAGE);
+        bindingTable();
+        
+        reset();
+    }//GEN-LAST:event_btnSaveActionPerformed
+
+    private void btnCariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCariActionPerformed
+        // TODO add your handling code here:
+    SearchTable(cmbangsuran.getSelectedItem().toString(),textCariangsuran.getText());
+        
+    }//GEN-LAST:event_btnCariActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCari;
-    private javax.swing.JButton btnDrop;
-    private javax.swing.JButton btnEdit;
     private javax.swing.JButton btnSave;
-    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<String> cmbangsuran;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblAngsuran;
     private javax.swing.JTextField textAnggotaP;
-    private javax.swing.JTextField textCari;
-    private javax.swing.JTextField textJumlah;
-    private javax.swing.JTextField textKd;
-    private javax.swing.JTextField textStatus;
-    private javax.swing.JTextField textTgl;
+    private javax.swing.JTextField textCariangsuran;
+    private javax.swing.JTextField textKdangsur;
     // End of variables declaration//GEN-END:variables
+public void bindingTable() {
+
+        String[] header = {"Kode Angsuran ", "kode Anggota Pinjam", "Tanggal angsuran", "jumlah angsuran","status"};
+
+        DefaultTableModel defaultTableModel = new DefaultTableModel(header, 0);
+        for (AngsuranPinjam angsuranPinjam : angsuranPinjamController.binding()) {
+            Object[] region1 = {
+                angsuranPinjam.getKdAngsuran(), angsuranPinjam.getKdAnggotaP(), angsuranPinjam.getTglAngsur(), angsuranPinjam.getJumlahAngsuran(),angsuranPinjam.getStatus()
+            };
+            defaultTableModel.addRow(region1);
+        }
+       tblAngsuran.setModel(defaultTableModel);
+
+    }
+private void SearchTable(String category,String data) {
+
+        String[] header = {"Kode angsuran", "kode anggota pinjam", "tanggal angsur","jumlah angsuran","status"};
+        
+       
+        DefaultTableModel defaultTableModel = new DefaultTableModel(header, 0);
+        for (AngsuranPinjam angsuranPinjam : angsuranPinjamController.find(category ,data)) {
+            Object[] region1 = {
+                angsuranPinjam.getKdAngsuran(), angsuranPinjam.getKdAnggotaP(),angsuranPinjam.getTglAngsur(),angsuranPinjam.getJumlahAngsuran(), angsuranPinjam.getStatus()
+            };
+            defaultTableModel.addRow(region1);
+        }
+        tblAngsuran.setModel(defaultTableModel);
+    }
+        
+  public void reset(){
+      textKdangsur.setText("");
+      textAnggotaP.setText("");
+     
+  }
 }

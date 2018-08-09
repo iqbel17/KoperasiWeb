@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package dao;
+package daos;
 
 import entities.Karyawan;
 import java.sql.Connection;
@@ -169,5 +169,20 @@ public class KaryawanDAO implements KaryawanInterfaceDAO {
             Logger.getLogger(KaryawanDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return karyawan;
+    }
+
+    @Override
+    public boolean getLogin(String kdKaryawan, String passLogin) {
+        
+        try {
+            String query = "SELECT *From karyawan where kd_karyawan=? and password=?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, kdKaryawan);
+            preparedStatement.setString(2, passLogin);
+        return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(KaryawanDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
 }

@@ -5,7 +5,7 @@
  */
 package views;
 
-import controller.KaryawanController;
+import controllers.KaryawanController;
 import entities.Karyawan;
 import java.sql.Connection;
 import javax.swing.JOptionPane;
@@ -176,6 +176,11 @@ public class KaryawanView extends javax.swing.JInternalFrame {
         });
 
         cmbKaryawan.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "kd_karyawan", "namaa_karyawan", "alamat", "telepon", "password" }));
+        cmbKaryawan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbKaryawanActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -260,6 +265,10 @@ public class KaryawanView extends javax.swing.JInternalFrame {
         bindingTable();
         reset();
     }//GEN-LAST:event_btnSaveActionPerformed
+
+    private void cmbKaryawanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbKaryawanActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbKaryawanActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

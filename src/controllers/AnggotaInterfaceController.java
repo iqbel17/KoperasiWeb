@@ -13,11 +13,12 @@ import java.util.List;
  * @author iqbael17
  */
 public interface AnggotaInterfaceController {
-    public boolean save(String kdAnggota, String NmAnggota,  String telepon, String Alamat);
-    public boolean edit(String kdAnggota, String NmAnggota,  String telepon, String Alamat);
+    public boolean save( String NmAnggota,  String telepon, String Alamat);
+    public boolean edit( String NmAnggota,  String telepon, String Alamat);
     public boolean drop (String id);
     public List<Anggota> binding();
     public List<Anggota> bindingsort(String category, String sort);
     public List<Anggota> find(String category, String Data);
     public Anggota findbyId(String id);
+    
 }
